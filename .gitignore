@@ -1,0 +1,7 @@
+config.py
+guizero
+.vscode
+*.pyc
+venv 
+__pycache__   
+requirements.txt
