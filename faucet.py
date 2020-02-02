@@ -57,11 +57,14 @@ class Picture(guizero.Picture):
         self.after(ms, self.stop_animation)
 
 
-def transition(img, func, time=None):
+def transition(img, func, time=None, click=True):
     icon.image = filepath + img
-    if time:
-        icon.timed_stop(time)
-    icon.when_clicked = func
+    if click:
+        icon.when_clicked = func
+        if time:
+            icon.timed_stop(time)
+    else:
+        icon.after(time, func)
     app.update()
 
 
@@ -70,7 +73,7 @@ def boot():
 
 
 def start():
-    transition("start.gif", wait_for_code, 3400)
+    transition("start.gif", wait_for_code, 3600, False)
 
 
 def wait_for_code():
