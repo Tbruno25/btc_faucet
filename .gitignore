@@ -3,5 +3,4 @@ guizero
 .vscode
 *.pyc
 venv 
-__pycache__   
-requirements.txt
+__pycache__  
