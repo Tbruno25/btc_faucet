@@ -6,9 +6,11 @@ import pyqrcode
 from bit import Key
 from bit.network import get_fee
 
-import time
+
 import guizero
-from guizero import App, Text
+from guizero import App, Box, Text
+from threading import Thread
+
 
 import scanner
 
@@ -29,15 +31,11 @@ class Faucet:
 
     def send(self, wallet_address):
         # minimum amount that can be sent is .00000546 satoshi's
-        self.key.send(wallet_address, 0.00000546, "btc")
+        return self.key.send([(wallet_address, 0.00000546, "btc")])
 
-    def latest_transaction(self):
-        return self.key.get_transactions()[0]
-
-    def generate_qr_hash(self):
-        hash = latest_transaction()
-        pyqrcode.create("https://blockstream.info/tx/" + hash)
-        latest_transaction.png("latest_transaction.png", scale=2.5)
+    def generate_qr_hash(self, hash):
+        latest_transaction = pyqrcode.create("https://blockstream.info/tx/" + hash)
+        latest_transaction.png(filepath + "latest_transaction.png", scale=5.5)
 
 
 class Picture(guizero.Picture):
@@ -57,46 +55,79 @@ class Picture(guizero.Picture):
         self.after(ms, self.stop_animation)
 
 
-def transition(img, func, time=None, click=True):
+def transition(img, func=None, time=None, click=False):
     icon.image = filepath + img
     if click:
         icon.when_clicked = func
         if time:
             icon.timed_stop(time)
-    else:
+    elif func:
         icon.after(time, func)
     app.update()
 
 
 def boot():
-    transition("boot.gif", start, 2600)
+    transition("boot.gif", start, 2600, click=True)
 
 
 def start():
-    transition("start.gif", wait_for_code, 3600, False)
+    transition("start.gif", wait_for_code, 3600)
 
 
 def wait_for_code():
     def scanning_run():
         if scanning.code:
             app.cancel(scanning_run)
-            scan()
+            scanned(scanning.code)
 
+    transition("start.png")
     scanning = scanner.App()
     scanning.run()
     app.repeat(200, scanning_run)
 
 
-def scan():
-    transition("scanned.gif", complete)
+def scanned(wallet_code):
+    def send_satoshis():
+        faucet = Faucet()
+        hash = faucet.send(wallet_code)
+        faucet.generate_qr_hash(hash)
+
+    satoshis = Thread(target=send_satoshis)
+    satoshis.start()
+    transition("scanned.gif", complete, 9000)
 
 
 def complete():
-    transition("complete.gif", boot, 2000)
+    transition("complete.gif", show_transaction, 3000)
+
+
+def show_transaction():
+    icon.hide()
+    message.show()
+    transaction.show()
+
+
+def restart():
+    message.hide()
+    transaction.hide()
+    icon.show()
+    boot()
 
 
 app = App(bg="white")
-icon = Picture(app)
 app.set_full_screen()
+icon = Picture(app)
+message = Text(
+    app,
+    size=26,
+    font="Quicksand Medium",
+    color="green",
+    text="Satoshi's are on the way!",
+    visible=False,
+)
+transaction = Picture(
+    app, image=filepath + "latest_transaction.png", align="bottom", visible=False
+)
+transaction.when_clicked = restart
 boot()
 app.display()
