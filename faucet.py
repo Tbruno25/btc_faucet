@@ -8,7 +8,7 @@ from bit.network import get_fee
 
 
 import guizero
-from guizero import App, Box, Text
+from guizero import App, Text
 from threading import Thread
 
 
@@ -104,6 +104,7 @@ def complete():
 def show_transaction():
     icon.hide()
     message.show()
+    app.update()
     transaction.show()
 
 
