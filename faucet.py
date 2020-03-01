@@ -6,17 +6,15 @@ import pyqrcode
 from bit import Key
 from bit.network import get_fee
 
-
+import os
 import guizero
 from guizero import App, Text
 from threading import Thread
 
-
 import scanner
 
 # For images
-# filepath = "C:/Users/tbrun/Documents/Dev/Btc_Faucet/"  # windows
-filepath = "/home/pi/App/images/"  # rpi
+filepath = os.getcwd() + "/images/"
 
 
 class Faucet:
@@ -104,8 +102,9 @@ def complete():
 def show_transaction():
     icon.hide()
     message.show()
-    app.update()
+    transaction.image = filepath + "latest_transaction.png"
     transaction.show()
+    app.update()
 
 
 def restart():
@@ -126,9 +125,7 @@ message = Text(
     text="Satoshi's are on the way!",
     visible=False,
 )
-transaction = Picture(
-    app, image=filepath + "latest_transaction.png", align="bottom", visible=False
-)
+transaction = Picture(app, align="bottom", visible=False)
 transaction.when_clicked = restart
 boot()
 app.display()
