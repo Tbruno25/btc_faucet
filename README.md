@@ -6,8 +6,8 @@ A minimal gui implementation of a [bitcoin faucet](https://en.wikipedia.org/wiki
 There are plenty of digital faucets but a google search at the time resulted in no physical bench top ones -- so I set out to build it. This was strictly a learning exercise and an opportunity to build something. 
 
 ## Parts
-[Raspberry Pi Zero W](https://www.adafruit.com/product/3400?gclid=EAIaIQobChMIkva4iaj65wIVlqDsCh1gcQmpEAQYASABEgIhF_D_BwE)
-[2.8" Touch LCD](https://www.amazon.com/dp/B073R7BH1B/)
+[Raspberry Pi Zero W](https://www.adafruit.com/product/3400?gclid=EAIaIQobChMIkva4iaj65wIVlqDsCh1gcQmpEAQYASABEgIhF_D_BwE)  
+[2.8" Touch LCD](https://www.amazon.com/dp/B073R7BH1B/)  
 [Pi Cam](https://www.amazon.com/gp/product/B07KF7GWJL/)
 
 [3D Printer .STL](https://grabcad.com/library/btc_faucet-stand-1)
